@@ -20,7 +20,11 @@ function App() {
   }
 
   function handleComplete(id) {
-    console.log("tamamlama fonksiyonunu buraya yazın")
+    console.log("tamamlama fonksiyonunu buraya yazın",id)
+    const tasksClone = [...tasks];
+    const updatedTask = tasksClone.find((t)=> t.id === id);
+    updatedTask.status="yapıldı";
+    setTasks(tasksClone);
   }
 
   return (
@@ -28,7 +32,7 @@ function App() {
       <div className="formColumn">
         <div className="form-container">
           <h2>Yeni Task</h2>
-          {/* <TaskForm kisiler={team} submitFn={handleTaskSubmit} /> */}
+           {/* <TaskForm kisiler={team} submitFn={handleTaskSubmit} />  */}
           <TaskHookForm kisiler={team} submitFn={handleTaskSubmit} />
         </div>
 
