@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { toast } from 'react-toastify';
+
 import "./app.css";
 import Task from "./Task";
 import TaskForm from "./TaskForm";
@@ -7,16 +9,21 @@ import PeopleForm from "./PeopleForm";
 import { initialTasks, initialTeam } from "./data";
 
 
+
+
 function App() {
+  const notifySuccess = (text) => toast.success(text);
   const [tasks, setTasks] = useState(initialTasks);
   const [team, setTeam] = useState(initialTeam);
 
   function handleTaskSubmit(yeniTask) {
     setTasks([yeniTask, ...tasks])
+    notifySuccess(yeniTask.title+ " eklendi");
   }
 
   function handlePeopleSubmit(yeniKisi) {
     setTeam([...team, yeniKisi])
+    notifySuccess(yeniKisi+" eklendi");
   }
 
   function handleComplete(id) {
@@ -25,7 +32,17 @@ function App() {
     const updatedTask = tasksClone.find((t)=> t.id === id);
     updatedTask.status="yapıldı";
     setTasks(tasksClone);
+    // Find yerine alternatif
+
+  //   const updatedTasks=tasks.map((t)=>{
+  //     if(t.id===id)
+  //       return {...t,status:"yapıldı"}});
+
+  notifySuccess(updatedTask.title+" tamamlandi");
   }
+
+  
+
 
   return (
     <div className="app">
