@@ -1,29 +1,30 @@
-import React, { useState, useEffect } from "react";
+import {useForm} from "react-hook-form"
 
 const PeopleForm = ({ kisiler, submitFn }) => {
-  const [isim, setIsim] = useState("");
-  const [error, setError] = useState(null);
+  const {register,handleSubmit,formState:{errors, isValid},reset,} = useForm({
+    defaultValues : {
+    isim:"",
+  },
+  mode:"all"
+})
 
-  useEffect(() => {
-    if (kisiler.includes(isim)) {
-      setError("Bu isim daha önce eklenmiş")
-    } else {
-      setError(null)
-    }
-  }, [isim, kisiler])
+  // useEffect(() => {
+  //   if (kisiler.includes(isim)) {
+  //     setError("Bu isim daha önce eklenmiş")
+  //   } else {
+  //     setError(null)
+  //   }
+  // }, [isim, kisiler])
 
-  function handleIsimChange(e) {
-    setIsim(e.target.value);
-  }
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    submitFn(isim);
-    setIsim("");
+  function myhandleSubmit(data) {
+    console.log(data);
+    submitFn(data.isim);
+    reset();
   }
 
   return (
-    <form className="taskForm" onSubmit={handleSubmit}>
+    <form className="taskForm" onSubmit={handleSubmit(myhandleSubmit)}>
       <div className="form-line">
         <label className="input-label" htmlFor="title">
           İsim
@@ -31,19 +32,22 @@ const PeopleForm = ({ kisiler, submitFn }) => {
         <input
           className="input-text"
           id="title"
-          name="title"
           type="text"
-          onChange={handleIsimChange}
-          value={isim}
+          {...register("isim",{
+            required : "İsim yazmalısınız.",
+            validate:{
+              isimIncluded : deger =>  !kisiler.includes(deger) || "Bu isim daha önce eklenmiş"
+            }
+          })}
         />
-        <p className="input-error">{error}</p>
+          <p className="input-error">{errors?.isim?.message}</p>
       </div>
 
       <div className="form-line">
         <button
           className="submit-button"
           type="submit"
-          disabled={isim.length === 0 || error}
+          disabled={!isValid}
         >
           Ekle
         </button>
